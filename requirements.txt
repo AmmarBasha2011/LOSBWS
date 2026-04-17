@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+pycloudflared
+requests
+python-multipart
