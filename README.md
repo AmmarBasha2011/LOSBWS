@@ -59,7 +59,7 @@ This project is optimized for **OpenClaw** skills.
 ### ⚡ Detailed AI Installation Prompt
 Copy and paste this entire prompt to your AI agent (OpenClaw/Anthropic/GPT) to get started:
 
-> "I want you to act as my Local OS Controller. First, use the **`/skill_creator`** tool (or similar) to analyze and install the official bridge skill from the repository: **https://github.com/AmmarBasha2011/LOSBWS**. 
+> "/skill_creator I want you to act as my Local OS Controller. First, use the **`/skill_creator`** tool (or similar) to analyze and install the official bridge skill from the repository: **https://github.com/AmmarBasha2011/LOSBWS**. 
 > 
 > Specifically, read and install the full manual located at: **`skills/local-os-bridge/SKILL.md`**. 
 > 
