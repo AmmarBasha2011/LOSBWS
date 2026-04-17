@@ -33,22 +33,32 @@ The **Ultimate Local OS Bridge** is a high-performance, secure FastAPI-based too
 - Linux Operating System (Ubuntu/Debian recommended)
 - `pip` and `venv`
 
-### Step-by-Step Installation
+### Step 1: Get a Permanent URL (Ngrok)
+To keep your bridge URL from changing every time:
+1.  **Sign up** at [Ngrok.com](https://ngrok.com/).
+2.  **Claim a Domain:** Go to "Cloud Edge" -> "Domains" and create a free static domain (e.g., `your-name.ngrok-free.app`).
+3.  **Get Token:** Go to "Your Authtoken" and copy your secret token.
+
+### Step 2: Configure Environment
+Create a file named `.env` in the project root:
+```env
+NGROK_TOKEN="your_token_here"
+NGROK_DOMAIN="your-name.ngrok-free.app"
+API_KEY="your_chosen_password"
+```
+
+### Step 3: Run the Bridge
 1. **Clone the Repository:**
    ```bash
    git clone https://github.com/AmmarBasha2011/LOSBWS
    cd LOSBWS
    ```
-
-2. **Run the Setup/Execution Script:**
-   The project includes a `run.sh` script that handles virtual environment activation and dependency checks.
+2. **Execute:**
    ```bash
    chmod +x run.sh
    ./run.sh
    ```
-
-3. **Obtain the Public Link:**
-   Once launched, a **Tkinter GUI popup** will appear with your unique Cloudflare Tunnel URL. Click **"Copy Link & Close"** to save it to your clipboard.
+   *The script will automatically use your .env settings or fallback to a temporary Cloudflare tunnel if .env is missing.*
 
 ---
 

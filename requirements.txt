@@ -3,3 +3,5 @@ uvicorn
 pycloudflared
 requests
 python-multipart
+pyngrok
+python-dotenv

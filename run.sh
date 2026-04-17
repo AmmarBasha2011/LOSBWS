@@ -50,12 +50,12 @@ def show_gui(url):
 # Start main.py and monitor stdout
 process = subprocess.Popen([sys.executable, "main.py"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 
-print("⏳ Starting Local OS Bridge... Please wait for the link window.")
+print("⏳ Starting Local OS Bridge with Stable URL...")
 
 for line in process.stdout:
     print(line, end="") # Still print to console
-    # Look for the Cloudflare URL
-    match = re.search(r"https://[a-zA-Z0-9-]+\.trycloudflare\.com", line)
+    # Look for the Ngrok or Cloudflare URL
+    match = re.search(r"https://[a-zA-Z0-9.-]+\.(ngrok-free\.dev|trycloudflare\.com)", line)
     if match:
         url = match.group(0)
         show_gui(url)

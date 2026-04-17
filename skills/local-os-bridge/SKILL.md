@@ -16,10 +16,10 @@ If you are an AI agent, you must first sync with the official code:
 
 ## 🔐 2. Authorization & Instance Setup
 You cannot send requests until the bridge is active on the user's machine.
-1.  **Ask the User:** "Please run `./run.sh` and give me the **Instance Link** from the popup window."
-2.  **Base URL:** The user will provide a link like `https://instance-id.trycloudflare.com`. This is your `BASE_URL`.
-3.  **API Key:** Every single request **MUST** include `api_key=ammar123` in the query parameters.
-    - *Example:* `{BASE_URL}/list?api_key=ammar123`
+1.  **Stable URL (Recommended):** If the user has configured `.env`, the bridge uses a permanent static domain.
+2.  **Verify:** Ask the user if they have run `./run.sh` and what the **Instance Link** is.
+3.  **Base URL:** Once provided, this is your `BASE_URL`.
+4.  **API Key:** Use the `API_KEY` defined in the user's `.env` (Default: `ammar123`). Every request **MUST** include `api_key={KEY}` in the query parameters.
 
 ## 📡 3. Sending Requests
 - All endpoints use **HTTP GET**.

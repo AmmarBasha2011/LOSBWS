@@ -15,13 +15,18 @@ import difflib
 import gzip
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request
+from dotenv import load_dotenv
 
-# --- CONFIGURATION ---
+# --- LOAD CONFIGURATION ---
+load_dotenv()
 BASE_DIR = os.path.abspath("workdir")
 if not os.path.exists(BASE_DIR):
     os.makedirs(BASE_DIR)
 
-API_KEY = "ammar123" # Keep this secret! AI must use this in the URL.
+API_KEY = os.getenv("API_KEY", "ammar123") 
+NGROK_TOKEN = os.getenv("NGROK_TOKEN")
+NGROK_DOMAIN = os.getenv("NGROK_DOMAIN")
+
 
 app = FastAPI(
     title="Ultimate Local OS Bridge (V5 RAT)", 
@@ -402,18 +407,42 @@ def print_ai_instructions(public_url: str):
 if __name__ == "__main__":
     import uvicorn
     import threading
-    from pycloudflared import try_cloudflare
+    from pyngrok import ngrok
 
     PORT = 8000
-
+    
     def start_tunnel():
         time.sleep(2)
+        if not NGROK_TOKEN or not NGROK_DOMAIN:
+            print("⚠️ NGROK_TOKEN or NGROK_DOMAIN not found in .env. Using Cloudflare instead.")
+            try:
+                from pycloudflared import try_cloudflare
+                cf_tunnel = try_cloudflare(port=PORT)
+                print_ai_instructions(cf_tunnel.tunnel)
+            except Exception as e:
+                print(f"Tunnel Error: {e}")
+            return
+
         try:
-            tunnel = try_cloudflare(port=PORT)
-            public_url = tunnel.tunnel 
-            print_ai_instructions(public_url)
+            print(f"📡 Setting up Stable Ngrok Tunnel: {NGROK_DOMAIN}...")
+            ngrok.set_auth_token(NGROK_TOKEN)
+            
+            # Check for existing tunnels to avoid port conflicts
+            tunnels = ngrok.get_tunnels()
+            for t in tunnels:
+                ngrok.disconnect(t.public_url)
+            
+            tunnel = ngrok.connect(PORT, "http", domain=NGROK_DOMAIN)
+            print_ai_instructions(tunnel.public_url)
         except Exception as e:
-            print(f"Tunnel Error: {e}")
+            print(f"❌ Ngrok Tunnel Error: {e}")
+            print("Trying Cloudflare backup...")
+            try:
+                from pycloudflared import try_cloudflare
+                cf_tunnel = try_cloudflare(port=PORT)
+                print_ai_instructions(cf_tunnel.tunnel)
+            except Exception as e2:
+                print(f"Backup Error: {e2}")
 
     tunnel_thread = threading.Thread(target=start_tunnel, daemon=True)
     tunnel_thread.start()
