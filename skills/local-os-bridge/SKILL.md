@@ -16,15 +16,21 @@ If you are an AI agent, you must first sync with the official code:
 
 ## 🔐 2. Authorization & Instance Setup
 You cannot send requests until the bridge is active on the user's machine.
-1.  **Stable URL (Recommended):** If the user has configured `.env`, the bridge uses a permanent static domain.
-2.  **Verify:** Ask the user if they have run `./run.sh` and what the **Instance Link** is.
-3.  **Base URL:** Once provided, this is your `BASE_URL`.
+1.  **Ask the User:** "Please provide the Instance Link from the bridge script's popup."
+2.  **Base URL:** Once the user provides the URL (e.g., a `.ngrok-free.dev` link), this is your `BASE_URL`.
+3.  **BYPASS NGROK WARNING (CRITICAL):**
+    Ngrok free domains display an "Abuse Prevention" warning page by default. To bypass this and reach the JSON API, you **MUST** include the following HTTP Header in every request:
+    - **Header Key:** `ngrok-skip-browser-warning`
+    - **Header Value:** `any-value-here`
 4.  **API Key:** Use the `API_KEY` defined in the user's `.env` (Default: `ammar123`). Every request **MUST** include `api_key={KEY}` in the query parameters.
 
 ## 📡 3. Sending Requests
 - All endpoints use **HTTP GET**.
 - Parameters are passed via **Query Strings**.
 - **Sandbox:** All file paths are relative to the `workdir/` folder. You cannot go higher than this directory.
+- **Example Fetch:**
+  `GET {BASE_URL}/list?api_key=your_key`
+  *Headers:* `{"ngrok-skip-browser-warning": "true"}`
 
 ---
 

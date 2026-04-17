@@ -413,8 +413,12 @@ if __name__ == "__main__":
     
     def start_tunnel():
         time.sleep(2)
-        if not NGROK_TOKEN or not NGROK_DOMAIN:
-            print("⚠️ NGROK_TOKEN or NGROK_DOMAIN not found in .env. Using Cloudflare instead.")
+        # Load values from .env (already loaded via load_dotenv() at top)
+        token = os.getenv("NGROK_TOKEN")
+        domain = os.getenv("NGROK_DOMAIN")
+
+        if not token or not domain:
+            print("⚠️ NGROK_TOKEN or NGROK_DOMAIN not found in .env. Falling back to temporary Cloudflare tunnel.")
             try:
                 from pycloudflared import try_cloudflare
                 cf_tunnel = try_cloudflare(port=PORT)
@@ -424,15 +428,17 @@ if __name__ == "__main__":
             return
 
         try:
-            print(f"📡 Setting up Stable Ngrok Tunnel: {NGROK_DOMAIN}...")
-            ngrok.set_auth_token(NGROK_TOKEN)
+            print(f"📡 Setting up Stable Ngrok Tunnel: {domain}...")
+            ngrok.set_auth_token(token)
             
-            # Check for existing tunnels to avoid port conflicts
-            tunnels = ngrok.get_tunnels()
-            for t in tunnels:
-                ngrok.disconnect(t.public_url)
+            # Disconnect existing tunnels to prevent conflicts
+            try:
+                tunnels = ngrok.get_tunnels()
+                for t in tunnels:
+                    ngrok.disconnect(t.public_url)
+            except: pass
             
-            tunnel = ngrok.connect(PORT, "http", domain=NGROK_DOMAIN)
+            tunnel = ngrok.connect(PORT, "http", domain=domain)
             print_ai_instructions(tunnel.public_url)
         except Exception as e:
             print(f"❌ Ngrok Tunnel Error: {e}")
