@@ -64,6 +64,9 @@ You cannot send requests until the bridge is active on the user's machine.
 | `/kill` | `pid` | Stop a running process by ID. |
 | `/ps` | None | Get top 15 CPU/RAM processes. |
 | `/open` | `filepath` | Open file with host's default app. |
+| `/click`| `x`, `y` | Trigger a hardware-level mouse click at (x, y). |
+| `/type` | `text` | Simulate typing text on the keyboard. |
+| `/screenshot`| None | Capture and return the current screen as PNG. |
 | `/sudo` | `command` | Run command with root privileges. |
 | `/uptime` | None | Check how long system is running. |
 | `/git_status` | `directory` | Check git repository status. |
@@ -102,4 +105,7 @@ You cannot send requests until the bridge is active on the user's machine.
 4. `GET /git_status?api_key=ammar123` -> Verify changes.
 5. **Special Actions:**
    - **`GET /open?filepath=index.html&api_key=...`**: Use this to show a rendered HTML file or images to the user on their screen.
+   - **`GET /click?x=500&y=500&api_key=...`**: Perform a mouse click at specific coordinates.
+   - **`GET /type?text=Hello World&api_key=...`**: Type text into the active window.
+   - **`GET /screenshot?api_key=...`**: Get a real-time image of the user's desktop.
    - **`GET /sudo?command=apt update&api_key=...`**: Use this for actions requiring root access (installing packages, system config).

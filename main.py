@@ -15,7 +15,12 @@ import difflib
 import gzip
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
+import pyautogui
+
+# --- GUI SAFETY ---
+pyautogui.FAILSAFE = True
 
 # --- LOAD CONFIGURATION ---
 load_dotenv()
@@ -294,6 +299,34 @@ def open_file(api_key: str, filepath: str):
     
     subprocess.Popen(["xdg-open", target], env=env)
     return {"message": f"Opening {filepath} with default application."}
+
+@app.get("/click", tags=tags_sys, summary="Trigger a hardware-level mouse click")
+def gui_click(api_key: str, x: int, y: int):
+    verify_key(api_key)
+    try:
+        pyautogui.click(x, y)
+        return {"message": f"Clicked at ({x}, {y})"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/type", tags=tags_sys, summary="Simulate typing text")
+def gui_type(api_key: str, text: str):
+    verify_key(api_key)
+    try:
+        pyautogui.write(text, interval=0.1)
+        return {"message": f"Typed text: {text}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/screenshot", tags=tags_sys, summary="Capture and return a screenshot")
+def gui_screenshot(api_key: str):
+    verify_key(api_key)
+    try:
+        screenshot_path = "current_screen.png"
+        pyautogui.screenshot(screenshot_path)
+        return FileResponse(screenshot_path, media_type="image/png")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/sudo", tags=tags_sys, summary="Run a command with sudo permissions")
 def run_sudo_command(api_key: str, command: str):

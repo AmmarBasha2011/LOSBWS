@@ -9,49 +9,48 @@ API_KEY = "ammar123"
 BASE_URL = "http://127.0.0.1:8000"
 
 def run_server():
+    # Set DISPLAY for local testing
+    os.environ["DISPLAY"] = ":0"
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="error")
 
-def test_endpoints():
-    print("--- STARTING OFFLINE TEST ---")
+def test_gui_endpoints():
+    print("--- STARTING GUI OFFLINE TEST ---")
     
     # Start server in thread
     server_thread = threading.Thread(target=run_server, daemon=True)
     server_thread.start()
     time.sleep(5) # Wait for server to start
 
-    results = []
-
-    # 1. Test /open (Creating a dummy file first)
-    if not os.path.exists("workdir"):
-        os.makedirs("workdir")
-    with open("workdir/test_open.txt", "w") as f:
-        f.write("This is a test file for the /open endpoint.")
-    
-    print("\nTesting /open...")
+    # 1. Test /screenshot
+    print("\nTesting /screenshot...")
     try:
-        r = requests.get(f"{BASE_URL}/open", params={"api_key": API_KEY, "filepath": "test_open.txt"})
-        print(f"Response: {r.json()}")
-        results.append(r.status_code == 200)
+        r = requests.get(f"{BASE_URL}/screenshot", params={"api_key": API_KEY})
+        if r.status_code == 200 and r.headers.get("content-type") == "image/png":
+            print(f"✅ SUCCESS: Screenshot received ({len(r.content)} bytes)")
+            with open("test_screenshot_received.png", "wb") as f:
+                f.write(r.content)
+        else:
+            print(f"❌ FAILED: {r.status_code} - {r.text}")
     except Exception as e:
-        print(f"Error testing /open: {e}")
-        results.append(False)
+        print(f"Error testing /screenshot: {e}")
 
-    # 2. Test /sudo (Running a safe sudo command: whoami)
-    print("\nTesting /sudo (whoami)...")
+    # 2. Test /type
+    print("\nTesting /type...")
     try:
-        r = requests.get(f"{BASE_URL}/sudo", params={"api_key": API_KEY, "command": "whoami"})
+        # We use a safe string
+        r = requests.get(f"{BASE_URL}/type", params={"api_key": API_KEY, "text": "Hello from Bridge Test!"})
         print(f"Response: {r.json()}")
-        # Should return "root" in stdout if sudo worked
-        results.append(r.status_code == 200 and "root" in r.json().get("stdout", "").lower())
     except Exception as e:
-        print(f"Error testing /sudo: {e}")
-        results.append(False)
+        print(f"Error testing /type: {e}")
 
-    print("\n--- TEST SUMMARY ---")
-    if all(results):
-        print("✅ ALL TESTS PASSED!")
-    else:
-        print("❌ SOME TESTS FAILED.")
+    # 3. Test /click
+    print("\nTesting /click...")
+    try:
+        # Clicking at (100, 100)
+        r = requests.get(f"{BASE_URL}/click", params={"api_key": API_KEY, "x": 100, "y": 100})
+        print(f"Response: {r.json()}")
+    except Exception as e:
+        print(f"Error testing /click: {e}")
 
 if __name__ == "__main__":
-    test_endpoints()
+    test_gui_endpoints()
