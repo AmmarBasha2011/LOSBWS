@@ -16,4 +16,5 @@ fi
 # --- ACTIVATE VENV & RUN ---
 # We run python directly so systemd can track the process
 source venv/bin/activate
+export DISPLAY=:0
 exec python3 main.py >> bridge.log 2>&1

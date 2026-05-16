@@ -54,3 +54,5 @@ t=2026-05-15T02:26:42+0300 lvl=eror msg="failed to reconnect session" obj=tunnel
 t=2026-05-15T02:27:12+0300 lvl=eror msg="failed to reconnect session" obj=tunnels.session err="failed to dial ngrok server with address \"connect.ngrok-agent.com:443\": dial tcp: lookup connect.ngrok-agent.com on 127.0.0.53:53: server misbehaving"
 t=2026-05-15T02:27:42+0300 lvl=eror msg="failed to reconnect session" obj=tunnels.session err="failed to dial ngrok server with address \"connect.ngrok-agent.com:443\": dial tcp: lookup connect.ngrok-agent.com on 127.0.0.53:53: server misbehaving"
 t=2026-05-15T02:28:12+0300 lvl=eror msg="failed to reconnect session" obj=tunnels.session err="failed to dial ngrok server with address \"connect.ngrok-agent.com:443\": dial tcp: lookup connect.ngrok-agent.com on 127.0.0.53:53: server misbehaving"
+Cannot open display: 
+Run '/usr/bin/pluma --help' to see a full list of available command line options.

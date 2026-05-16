@@ -285,8 +285,14 @@ def git_status(api_key: str, directory: str = "."):
 def open_file(api_key: str, filepath: str):
     verify_key(api_key)
     target = get_safe_path(filepath)
-    # xdg-open is the standard Linux way to open files with default apps
-    subprocess.Popen(["xdg-open", target])
+    
+    # We must provide the DISPLAY environment variable so the background process
+    # knows which screen to use for the GUI application.
+    env = os.environ.copy()
+    if "DISPLAY" not in env:
+        env["DISPLAY"] = ":0"
+    
+    subprocess.Popen(["xdg-open", target], env=env)
     return {"message": f"Opening {filepath} with default application."}
 
 @app.get("/sudo", tags=tags_sys, summary="Run a command with sudo permissions")

@@ -9,6 +9,9 @@ ExecStart=/bin/bash /home/ammar/ai_bridge_link/run.sh
 WorkingDirectory=/home/ammar/ai_bridge_link
 Restart=always
 RestartSec=5
+# Add GUI access variables
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/ammar/.Xauthority
 
 [Install]
 WantedBy=default.target
