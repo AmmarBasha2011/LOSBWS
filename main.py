@@ -301,13 +301,32 @@ def run_sudo_command(api_key: str, command: str):
     if not SUDO_PASSWORD:
         raise HTTPException(status_code=500, detail="SUDO_PASSWORD not configured in .env")
     
-    # sudo -S reads password from stdin
-    full_cmd = f'echo "{SUDO_PASSWORD}" | sudo -S {command}'
-    res = subprocess.run(full_cmd, shell=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30)
-    
-    # Scrub password from stderr just in case it leaks
-    stderr_clean = res.stderr.replace(SUDO_PASSWORD, "********")
-    return {"stdout": res.stdout.strip(), "stderr": stderr_clean.strip(), "exit_code": res.returncode}
+    try:
+        # Use Popen to interactively send the password to sudo -S
+        # -S reads from stdin, -p '' suppresses the prompt
+        proc = subprocess.Popen(
+            ["sudo", "-S", "-p", "", "bash", "-c", command],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=BASE_DIR
+        )
+        
+        stdout, stderr = proc.communicate(input=f"{SUDO_PASSWORD}\n", timeout=30)
+        
+        # Scrub password from stderr for security
+        stderr_clean = stderr.replace(SUDO_PASSWORD, "********")
+        return {
+            "stdout": stdout.strip(),
+            "stderr": stderr_clean.strip(),
+            "exit_code": proc.returncode
+        }
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        return {"error": "Command timed out after 30 seconds."}
+    except Exception as e:
+        return {"error": str(e)}
 
 # ==========================================
 #         5. NETWORK & DOWNLOADS

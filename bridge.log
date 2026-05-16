@@ -56,3 +56,12 @@ t=2026-05-15T02:27:42+0300 lvl=eror msg="failed to reconnect session" obj=tunnel
 t=2026-05-15T02:28:12+0300 lvl=eror msg="failed to reconnect session" obj=tunnels.session err="failed to dial ngrok server with address \"connect.ngrok-agent.com:443\": dial tcp: lookup connect.ngrok-agent.com on 127.0.0.53:53: server misbehaving"
 Cannot open display: 
 Run '/usr/bin/pluma --help' to see a full list of available command line options.
+Gtk-Message: 19:21:27.893: Failed to load module "colorreload-gtk-module"
+Gtk-Message: 19:21:27.894: Failed to load module "window-decorations-gtk-module"
+Gtk-Message: 19:23:21.750: Failed to load module "colorreload-gtk-module"
+Gtk-Message: 19:23:21.750: Failed to load module "window-decorations-gtk-module"
+MESA-INTEL: warning: Haswell Vulkan support is incomplete
+[4739:4739:0516/192341.049122:ERROR:content/browser/network_service_instance_impl.cc:597] Network service crashed, restarting service.
+[4739:4739:0516/192345.022971:ERROR:extensions/browser/service_worker/service_worker_task_queue.cc:449] DidStartWorkerFail nngceckbapebfimnlniiiahkandclblb: 3
+[4739:4739:0516/192345.025849:ERROR:extensions/browser/service_worker/service_worker_task_queue.cc:449] DidStartWorkerFail cclelndahbckbenkjhflpdbgdldlbecc: 3
+[4739:4785:0516/192349.499426:ERROR:crypto/nss_util.cc:344] After loading Root Certs, loaded==false: NSS error code: -8018
