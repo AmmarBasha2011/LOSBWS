@@ -326,7 +326,7 @@ def gui_screen_info(api_key: str):
     return {"width": width, "height": height, "mouse_pos": pyautogui.position()}
 
 @app.get("/screenshot", tags=tags_sys, summary="Capture screen with optional coordinate grid")
-def gui_screenshot(api_key: str, grid: bool = False):
+def gui_screenshot(api_key: str, grid: bool = False, b64: bool = False):
     verify_key(api_key)
     try:
         screenshot_path = "current_screen.png"
@@ -336,6 +336,16 @@ def gui_screenshot(api_key: str, grid: bool = False):
             img = add_grid_to_image(img)
             
         img.save(screenshot_path)
+        
+        if b64:
+            with open(screenshot_path, "rb") as f:
+                encoded_string = base64.b64encode(f.read()).decode('utf-8')
+            return {
+                "mime_type": "image/png",
+                "base64": encoded_string,
+                "instructions": "This is a base64 encoded image. You can use it directly in your vision model context."
+            }
+            
         return FileResponse(screenshot_path, media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

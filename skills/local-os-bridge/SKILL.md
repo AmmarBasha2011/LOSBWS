@@ -19,8 +19,10 @@ This is the definitive guide for AI agents to control the host Linux machine. Yo
 
 ## 🏗️ 2. GUI AUTOMATION WORKFLOW
 To control the user's screen, follow this cycle:
-1.  **Context:** `GET /screen_info` to get resolution.
-2.  **Vision:** `GET /screenshot?grid=true` to see the desktop with a coordinate grid.
+1.  **Get Context:** `GET /screen_info` to get resolution.
+2.  **Vision:** `GET /screenshot?grid=true&b64=true` to see the desktop with a coordinate grid.
+    - Using `grid=true` adds red/yellow X/Y markers.
+    - Using `b64=true` returns a JSON string that is easy for AI agents (like n8n) to "read".
 3.  **Analyze:** Find target coordinates (X, Y) using the red/yellow markers on the image.
 4.  **Action:** Use `/click`, `/type`, or `/open`.
 5.  **Verify:** `GET /screenshot` (without grid) to confirm the result.
@@ -32,9 +34,9 @@ To control the user's screen, follow this cycle:
 ### 🖱️ A. GUI & Desktop Control
 | Endpoint | Inputs | Description | Example Output |
 | :--- | :--- | :--- | :--- |
-| `/screen_info`| None | Get screen size & mouse pos. | `{"width": 1920, "height": 1080, "mouse_pos": [0,0]}` |
-| `/screenshot` | `grid` (bool) | Capture screen. Set `grid=true` for X/Y markers. | *(Returns PNG image binary)* |
-| `/click` | `x`, `y` | Hardware-level mouse click. | `{"message": "Clicked at (500, 500)"}` |
+| `/screen_info`| None | Get screen size & mouse pos. | `{"width": 1920, ...}` |
+| `/screenshot` | `grid` (bool), `b64` (bool) | Capture screen. Set `grid=true` for markers. Set `b64=true` to get AI-friendly JSON. | `{"base64": "...", "mime_type": "image/png"}` |
+| `/click` | `x`, `y` | Hardware-level mouse click. | `{"message": "Clicked..."}` |
 | `/type` | `text` | Simulate keyboard typing. | `{"message": "Typed text: Hello"}` |
 | `/open` | `filepath` | Open file in default app (Brave, etc). | `{"message": "Opening file.html..."}` |
 
