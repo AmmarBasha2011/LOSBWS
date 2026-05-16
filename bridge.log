@@ -65,3 +65,4 @@ MESA-INTEL: warning: Haswell Vulkan support is incomplete
 [4739:4739:0516/192345.022971:ERROR:extensions/browser/service_worker/service_worker_task_queue.cc:449] DidStartWorkerFail nngceckbapebfimnlniiiahkandclblb: 3
 [4739:4739:0516/192345.025849:ERROR:extensions/browser/service_worker/service_worker_task_queue.cc:449] DidStartWorkerFail cclelndahbckbenkjhflpdbgdldlbecc: 3
 [4739:4785:0516/192349.499426:ERROR:crypto/nss_util.cc:344] After loading Root Certs, loaded==false: NSS error code: -8018
+t=2026-05-16T20:15:45+0300 lvl=warn msg="failed to start tunnel" pg=/api/tunnels id=284f9fb5dcc7dbbc err="failed to start tunnel: The endpoint 'https://citrus-trance-exporter.ngrok-free.dev' is already online. Either\n1. stop your existing endpoint first, or\n2. start both endpoints with `--pooling-enabled` to load balance between them.\r\n\r\nERR_NGROK_334\r\n"

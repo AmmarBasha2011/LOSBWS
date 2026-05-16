@@ -1,111 +1,107 @@
 ---
 name: local-os-bridge
-description: Comprehensive OS control for AI. Filesystem, System, Network, and Security tools.
+description: The ultimate master manual for OS control. 50+ endpoints for Filesystem, GUI, System, and Network.
 repo: https://github.com/AmmarBasha2011/LOSBWS
 user-invocable: true
 ---
 
-# 🚀 COMPREHENSIVE AI SKILL: Local OS Bridge (V5)
+# 👑 MASTER MANUAL: Ultimate Local OS Bridge (V5)
 
-This file is your complete manual. You must use it to understand how to install, authorize, and control the host machine.
+This is the definitive guide for AI agents to control the host Linux machine. You must use this file to understand every capability, parameter, and expected response.
 
-## 📥 1. Installation & Synchronization
-If you are an AI agent, you must first sync with the official code:
-- **Repository:** https://github.com/AmmarBasha2011/LOSBWS
-- **Action:** Read `main.py` to understand the logic and `SKILL.md` for the interface.
-
-## 🔐 2. Authorization & Instance Setup
-You cannot send requests until the bridge is active on the user's machine.
-1.  **Ask the User:** "Please provide the Instance Link from the bridge script's popup."
-2.  **Base URL:** Once the user provides the URL (e.g., a `.ngrok-free.dev` link), this is your `BASE_URL`.
-3.  **BYPASS NGROK WARNING (CRITICAL):**
-    Ngrok free domains display an "Abuse Prevention" warning page by default. To bypass this and reach the JSON API, you **MUST** include the following HTTP Header in every request:
-    - **Header Key:** `ngrok-skip-browser-warning`
-    - **Header Value:** `any-value-here`
-4.  **API Key:** Use the `API_KEY` defined in the user's `.env` (Default: `ammar123`). Every request **MUST** include `api_key={KEY}` in the query parameters.
-
-## 📡 3. Sending Requests
-- All endpoints use **HTTP GET**.
-- Parameters are passed via **Query Strings**.
-- **Sandbox:** All file paths are relative to the `workdir/` folder. You cannot go higher than this directory.
-- **Example Fetch:**
-  `GET {BASE_URL}/list?api_key=your_key`
-  *Headers:* `{"ngrok-skip-browser-warning": "true"}`
+## 🔴 1. CRITICAL ACTIVATION & AUTH
+1.  **Instance Link:** Ask the user for the "Instance Link" from their bridge script.
+2.  **Ngrok Warning:** You **MUST** send the header `ngrok-skip-browser-warning: true` with every request.
+3.  **API Key:** Append `?api_key=ammar123` (or the user's custom key) to every request.
+4.  **Sandbox:** You are restricted to the `workdir/` folder for file operations. Use relative paths.
 
 ---
 
-## 🛠️ 4. API Endpoints Reference
-
-### 📁 CORE FILESYSTEM
-| Endpoint | Parameters | Description |
-| :--- | :--- | :--- |
-| `/list` | `directory` | List files and folders. |
-| `/read` | `filepath` | Read file as plain text. |
-| `/write` | `filepath`, `content` | Write text to a file (overwrites). |
-| `/append`| `filepath`, `content` | Add text to the end of a file. |
-| `/delete`| `path` | Delete a file or folder. |
-| `/mkdir` | `directory` | Create a new folder. |
-| `/copy`  | `source`, `destination`| Copy files or folders. |
-| `/rename`| `old_path`, `new_path` | Move or rename files/folders. |
-
-### 🔍 SEARCH & DATA
-| Endpoint | Parameters | Description |
-| :--- | :--- | :--- |
-| `/grep` | `directory`, `search_string` | Find text inside multiple files. |
-| `/regex_search`| `filepath`, `pattern` | Search file using RegEx. |
-| `/diff` | `file1`, `file2` | Get difference between two files. |
-| `/csv_to_json`| `filepath` | Parse CSV file into JSON. |
-| `/json_to_csv`| `json_filepath`, `output_csv` | Save JSON list as CSV. |
-
-### ⚡ SYSTEM & POWER
-| Endpoint | Parameters | Description |
-| :--- | :--- | :--- |
-| `/run_command`| `command` | Execute any Linux shell command. |
-| `/kill` | `pid` | Stop a running process by ID. |
-| `/ps` | None | Get top 15 CPU/RAM processes. |
-| `/open` | `filepath` | Open file with host's default app. |
-| `/click`| `x`, `y` | Trigger a hardware-level mouse click at (x, y). |
-| `/type` | `text` | Simulate typing text on the keyboard. |
-| `/screenshot`| None | Capture and return the current screen as PNG. |
-| `/sudo` | `command` | Run command with root privileges. |
-| `/uptime` | None | Check how long system is running. |
-| `/git_status` | `directory` | Check git repository status. |
-
-### 🌐 NETWORK & SECURITY
-| Endpoint | Parameters | Description |
-| :--- | :--- | :--- |
-| `/curl` | `url` | Fetch any URL from the host. |
-| `/download_url`| `url`, `save_as` | Download a file to `workdir`. |
-| `/ip` | None | Get Host's public IP address. |
-| `/hash` | `filepath` | Get SHA256 of a file. |
-| `/base64_read`| `filepath` | Read binary file as Base64. |
+## 🏗️ 2. GUI AUTOMATION WORKFLOW
+To control the user's screen, follow this cycle:
+1.  **Context:** `GET /screen_info` to get resolution.
+2.  **Vision:** `GET /screenshot?grid=true` to see the desktop with a coordinate grid.
+3.  **Analyze:** Find target coordinates (X, Y) using the red/yellow markers on the image.
+4.  **Action:** Use `/click`, `/type`, or `/open`.
+5.  **Verify:** `GET /screenshot` (without grid) to confirm the result.
 
 ---
 
-## 📂 5. Archive & Compression
-- **`/tar`**: `folder_path`, `archive_name` -> Create `.tar.gz`.
-- **`/untar`**: `archive_path`, `extract_to` -> Extract `.tar.gz`.
-- **`/gzip`**: `filepath` -> Compress to `.gz`.
-- **`/gunzip`**: `filepath` -> Decompress `.gz`.
+## 📚 3. COMPLETE ENDPOINT REFERENCE
+
+### 🖱️ A. GUI & Desktop Control
+| Endpoint | Inputs | Description | Example Output |
+| :--- | :--- | :--- | :--- |
+| `/screen_info`| None | Get screen size & mouse pos. | `{"width": 1920, "height": 1080, "mouse_pos": [0,0]}` |
+| `/screenshot` | `grid` (bool) | Capture screen. Set `grid=true` for X/Y markers. | *(Returns PNG image binary)* |
+| `/click` | `x`, `y` | Hardware-level mouse click. | `{"message": "Clicked at (500, 500)"}` |
+| `/type` | `text` | Simulate keyboard typing. | `{"message": "Typed text: Hello"}` |
+| `/open` | `filepath` | Open file in default app (Brave, etc). | `{"message": "Opening file.html..."}` |
+
+### ⚡ B. System & OS Power
+| Endpoint | Inputs | Description | Example Output |
+| :--- | :--- | :--- | :--- |
+| `/sudo` | `command` | Run command as root (installs, etc). | `{"stdout": "root", "exit_code": 0}` |
+| `/run_command`| `command` | Execute shell command in `workdir`. | `{"stdout": "...", "exit_code": 0}` |
+| `/ps` | None | List top 15 resource-heavy processes. | `{"processes": "PID CMD CPU%..."}` |
+| `/kill` | `pid` (int) | Terminate a process by ID. | `{"message": "Process 1234 killed"}` |
+| `/whoami` | None | Check which user you are. | `{"user": "ammar"}` |
+| `/uptime` | None | Check system uptime. | `{"uptime": "up 3 hours"}` |
+| `/git_status` | `directory` | Check git repo status. | `{"git_output": "On branch main..."}` |
+
+### 📁 C. Core Filesystem (Inside `workdir/`)
+| Endpoint | Inputs | Description | Example Output |
+| :--- | :--- | :--- | :--- |
+| `/list` | `directory` | List contents of a folder. | `{"files": ["app.py", "data/"]}` |
+| `/read` | `filepath` | Read full text of a file. | `{"content": "..."}` |
+| `/write` | `filepath`, `content` | Create/Overwrite file. | `{"message": "Wrote to file.txt"}` |
+| `/append` | `filepath`, `content` | Add text to end of file. | `{"message": "Appended"}` |
+| `/delete` | `path` | Delete file or folder recursively. | `{"message": "Deleted"}` |
+| `/mkdir` | `directory` | Create a new folder. | `{"message": "Directory Created"}` |
+| `/copy` | `src`, `dest` | Copy file or folder. | `{"message": "Copied"}` |
+| `/rename` | `old`, `new` | Move or rename file/folder. | `{"message": "Renamed"}` |
+| `/info` | `path` | Get file size & modified date. | `{"size_bytes": 500, "modified": "..."}` |
+
+### 🔍 D. Data Processing & Search
+| Endpoint | Inputs | Description | Example Output |
+| :--- | :--- | :--- | :--- |
+| `/grep` | `dir`, `search_string` | Search text in all files in a folder. | `{"results": {"f1.txt": ["line 5"]}}` |
+| `/regex_search`| `filepath`, `pattern`| Find matches in a file using RegEx. | `{"match_count": 3, "matches": [...]}` |
+| `/diff` | `file1`, `file2` | Get unified diff of two files. | `{"diff": "--- a\n+++ b..."}` |
+| `/csv_to_json`| `filepath` | Convert CSV file to JSON list. | `{"data": [{"name": "A"}]}` |
+| `/json_to_csv`| `json_path`, `out` | Save JSON list as a CSV file. | `{"message": "Converted"}` |
+
+### 📦 E. Archives & Compression
+| Endpoint | Inputs | Description | Example Output |
+| :--- | :--- | :--- | :--- |
+| `/tar` | `path`, `name` | Create a `.tar.gz` of a folder. | `{"message": "Tar created"}` |
+| `/untar` | `path`, `dest` | Extract a `.tar.gz` archive. | `{"message": "Untarred"}` |
+| `/gzip` | `filepath` | Compress single file to `.gz`. | `{"message": "Compressed"}` |
+| `/gunzip` | `filepath` | Decompress `.gz` file. | `{"message": "Extracted"}` |
+
+### 🌐 F. Network Tools
+| Endpoint | Inputs | Description | Example Output |
+| :--- | :--- | :--- | :--- |
+| `/curl` | `url` | Make GET request from host (Proxy). | `{"status": 200, "body": "..."}` |
+| `/download_url`| `url`, `save_as` | Download file to `workdir`. | `{"message": "Downloaded"}` |
+| `/ip` | None | Get Host's public IP. | `{"public_ip": "1.2.3.4"}` |
+| `/ports` | None | List open ports (ss -tuln). | `{"ports": "..."}` |
+
+### 🔐 G. Security & Encoding
+| Endpoint | Inputs | Description | Example Output |
+| :--- | :--- | :--- | :--- |
+| `/hash` | `filepath` | Get SHA256 of a file. | `{"sha256": "..."}` |
+| `/md5` | `filepath` | Get MD5 of a file. | `{"md5": "..."}` |
+| `/base64_read`| `filepath` | Read file as Base64 string. | `{"base64": "..."}` |
+| `/base64_write`| `filepath`, `b64` | Write Base64 string to binary file. | `{"message": "Binary written"}` |
 
 ---
 
-## ⚠️ 6. Error Codes
-- **401**: You forgot the `api_key=ammar123`.
-- **403**: You tried to access files outside the sandbox.
-- **404**: The file or path doesn't exist.
-
----
-
-## 💡 7. Workflow Example
-**User:** "Fix the bug in main.py and test it."
-1. `GET /read?filepath=main.py&api_key=ammar123` -> Find bug.
-2. `GET /write?filepath=main.py&content=...&api_key=ammar123` -> Fix bug.
-3. `GET /run_command?command=python3 main.py&api_key=ammar123` -> Test.
-4. `GET /git_status?api_key=ammar123` -> Verify changes.
-5. **Special Actions:**
-   - **`GET /open?filepath=index.html&api_key=...`**: Use this to show a rendered HTML file or images to the user on their screen.
-   - **`GET /click?x=500&y=500&api_key=...`**: Perform a mouse click at specific coordinates.
-   - **`GET /type?text=Hello World&api_key=...`**: Type text into the active window.
-   - **`GET /screenshot?api_key=...`**: Get a real-time image of the user's desktop.
-   - **`GET /sudo?command=apt update&api_key=...`**: Use this for actions requiring root access (installing packages, system config).
+## 💡 4. PRO TIPS FOR AI
+- **Combine Commands:** Read a file -> Edit it -> Run it -> Check Uptime.
+- **Root Tasks:** Use `/sudo` for anything involving `apt`, `systemctl`, or `/etc/`.
+- **Large Files:** Use `/split` to break files if they are too big for your context window.
+- **Errors:**
+    - `401`: Check your `api_key`.
+    - `403`: You tried to escape the `workdir/`. Stay in the sandbox!
+    - `500`: System error (e.g., file not found or invalid command).

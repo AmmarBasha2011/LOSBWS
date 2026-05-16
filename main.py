@@ -18,6 +18,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 import pyautogui
+from PIL import Image, ImageDraw, ImageFont
 
 # --- GUI SAFETY ---
 pyautogui.FAILSAFE = True
@@ -318,15 +319,52 @@ def gui_type(api_key: str, text: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/screenshot", tags=tags_sys, summary="Capture and return a screenshot")
-def gui_screenshot(api_key: str):
+@app.get("/screen_info", tags=tags_sys, summary="Get screen resolution and info")
+def gui_screen_info(api_key: str):
+    verify_key(api_key)
+    width, height = pyautogui.size()
+    return {"width": width, "height": height, "mouse_pos": pyautogui.position()}
+
+@app.get("/screenshot", tags=tags_sys, summary="Capture screen with optional coordinate grid")
+def gui_screenshot(api_key: str, grid: bool = False):
     verify_key(api_key)
     try:
         screenshot_path = "current_screen.png"
-        pyautogui.screenshot(screenshot_path)
+        img = pyautogui.screenshot()
+        
+        if grid:
+            img = add_grid_to_image(img)
+            
+        img.save(screenshot_path)
         return FileResponse(screenshot_path, media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+def add_grid_to_image(img):
+    """Draws a coordinate grid and labels on the image to help AI navigation."""
+    draw = ImageDraw.Draw(img)
+    width, height = img.size
+    
+    # Grid settings
+    step = 200  # Every 200 pixels
+    line_color = (255, 0, 0, 128) # Red lines
+    text_color = (255, 255, 0)     # Yellow labels
+    
+    # Draw vertical lines & X-axis labels
+    for x in range(0, width, step):
+        draw.line([(x, 0), (x, height)], fill=line_color, width=1)
+        draw.text((x + 5, 5), f"X={x}", fill=text_color)
+        
+    # Draw horizontal lines & Y-axis labels
+    for y in range(0, height, step):
+        draw.line([(0, y), (width, y)], fill=line_color, width=1)
+        draw.text((5, y + 5), f"Y={y}", fill=text_color)
+        
+    # Mark common center points
+    draw.ellipse([width//2-5, height//2-5, width//2+5, height//2+5], fill="blue")
+    draw.text((width//2 + 10, height//2 + 10), "CENTER", fill="blue")
+    
+    return img
 
 @app.get("/sudo", tags=tags_sys, summary="Run a command with sudo permissions")
 def run_sudo_command(api_key: str, command: str):
