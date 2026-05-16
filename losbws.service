@@ -1,0 +1,14 @@
+[Unit]
+Description=Ultimate Local OS Bridge (LOSBWS) Service
+After=network.target
+
+[Service]
+Type=simple
+# Using the space-free symlink
+ExecStart=/bin/bash /home/ammar/ai_bridge_link/run.sh
+WorkingDirectory=/home/ammar/ai_bridge_link
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

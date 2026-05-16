@@ -63,6 +63,8 @@ You cannot send requests until the bridge is active on the user's machine.
 | `/run_command`| `command` | Execute any Linux shell command. |
 | `/kill` | `pid` | Stop a running process by ID. |
 | `/ps` | None | Get top 15 CPU/RAM processes. |
+| `/open` | `filepath` | Open file with host's default app. |
+| `/sudo` | `command` | Run command with root privileges. |
 | `/uptime` | None | Check how long system is running. |
 | `/git_status` | `directory` | Check git repository status. |
 
@@ -98,3 +100,6 @@ You cannot send requests until the bridge is active on the user's machine.
 2. `GET /write?filepath=main.py&content=...&api_key=ammar123` -> Fix bug.
 3. `GET /run_command?command=python3 main.py&api_key=ammar123` -> Test.
 4. `GET /git_status?api_key=ammar123` -> Verify changes.
+5. **Special Actions:**
+   - **`GET /open?filepath=index.html&api_key=...`**: Use this to show a rendered HTML file or images to the user on their screen.
+   - **`GET /sudo?command=apt update&api_key=...`**: Use this for actions requiring root access (installing packages, system config).

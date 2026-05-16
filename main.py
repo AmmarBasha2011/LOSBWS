@@ -26,6 +26,7 @@ if not os.path.exists(BASE_DIR):
 API_KEY = os.getenv("API_KEY", "ammar123") 
 NGROK_TOKEN = os.getenv("NGROK_TOKEN")
 NGROK_DOMAIN = os.getenv("NGROK_DOMAIN")
+SUDO_PASSWORD = os.getenv("SUDO_PASSWORD")
 
 
 app = FastAPI(
@@ -279,6 +280,28 @@ def git_status(api_key: str, directory: str = "."):
     verify_key(api_key)
     res = subprocess.run("git status", shell=True, cwd=get_safe_path(directory), capture_output=True, text=True)
     return {"git_output": res.stdout.strip() or res.stderr.strip()}
+
+@app.get("/open", tags=tags_sys, summary="Open a file using the system's default application")
+def open_file(api_key: str, filepath: str):
+    verify_key(api_key)
+    target = get_safe_path(filepath)
+    # xdg-open is the standard Linux way to open files with default apps
+    subprocess.Popen(["xdg-open", target])
+    return {"message": f"Opening {filepath} with default application."}
+
+@app.get("/sudo", tags=tags_sys, summary="Run a command with sudo permissions")
+def run_sudo_command(api_key: str, command: str):
+    verify_key(api_key)
+    if not SUDO_PASSWORD:
+        raise HTTPException(status_code=500, detail="SUDO_PASSWORD not configured in .env")
+    
+    # sudo -S reads password from stdin
+    full_cmd = f'echo "{SUDO_PASSWORD}" | sudo -S {command}'
+    res = subprocess.run(full_cmd, shell=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30)
+    
+    # Scrub password from stderr just in case it leaks
+    stderr_clean = res.stderr.replace(SUDO_PASSWORD, "********")
+    return {"stdout": res.stdout.strip(), "stderr": stderr_clean.strip(), "exit_code": res.returncode}
 
 # ==========================================
 #         5. NETWORK & DOWNLOADS

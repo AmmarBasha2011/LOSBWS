@@ -14,6 +14,8 @@ The **Ultimate Local OS Bridge** is a high-performance, secure FastAPI-based too
 ### 💻 System & OS Power
 - **Process Management:** List processes (sorted by CPU/MEM) and kill them by PID.
 - **Terminal Access:** Execute any shell command directly through the bridge.
+- **Root Access:** Run commands with `sudo` using the bridge.
+- **Desktop Interaction:** Open files (HTML, Text, Images) using the system's default apps.
 - **Git Integration:** Check repository status and manage local codebases.
 
 ### 🌐 Network & Security
@@ -45,6 +47,7 @@ Create a file named `.env` in the project root:
 NGROK_TOKEN="your_token_here"
 NGROK_DOMAIN="your-name.ngrok-free.app"
 API_KEY="your_chosen_password"
+SUDO_PASSWORD="your_linux_password"
 ```
 
 ### Step 3: Run the Bridge
